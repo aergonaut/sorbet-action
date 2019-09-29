@@ -1,0 +1,5 @@
+name: "Sorbet"
+description: "Typecheck your Ruby code with Sorbet"
+runs:
+  using: "docker"
+  image: "Dockerfile"
