@@ -1,3 +1,4 @@
+require "open3"
 require "net/http"
 require "json"
 require "time"
@@ -58,7 +59,9 @@ def update_check(id:, conclusion:, output:)
 end
 
 def run_sorbet
-  output = File.readlines(ARGV[0])
+  _stdout, stderr, _status = Open3.capture3("bundle exec srb tc")
+
+  output = stderr
 
   results = Hash.new { |hash, key| hash[key] = [] }
 
