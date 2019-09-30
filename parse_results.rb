@@ -51,6 +51,8 @@ def update_check(id:, conclusion:, output:)
   http.use_ssl = true
   path = "/repos/#{@owner}/#{@repo}/check-runs/#{id}"
 
+  puts payload.to_json
+
   res = http.patch(path, payload.to_json, @headers)
 
   if res.code.to_i >= 300
