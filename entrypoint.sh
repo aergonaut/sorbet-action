@@ -1,9 +1,11 @@
 #!/bin/sh
 
-set -e
+set -ex
 
 cd $GITHUB_WORKSPACE
 bundle install --jobs 4 --quiet
-bundle exec srb tc > /srb-tc-output.txt
+
+set +e
+bundle exec srb tc 2> /srb-tc-output.txt
 
 ruby /parse_results.rb /src-tc-output.txt
