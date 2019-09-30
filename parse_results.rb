@@ -65,8 +65,6 @@ def run_sorbet
 
   output = stderr.split("\n")
 
-  results = Hash.new { |hash, key| hash[key] = [] }
-
   if output[0].strip == "No errors! Great job."
     # handle success here
     check_result = {
@@ -80,26 +78,25 @@ def run_sorbet
     ]
   end
 
-  current_file = nil
+  annotations = []
+  current_annotation = {}
   output.each do |line|
-    next if line == ""
-    # an unindented line signals output for a new error has started
-    if line !~ /^\s/
-      current_file = line.split(":")[0..1].join
+    # skip the line summarizing the number of errors
+    next if line =~ /^Errors: \d+/
+
+    if line =~ /^\S+:\d+/
+      # start a new annotation
+      parts = line.split(":")
+      current_annotation = {
+        path: parts[0],
+        start_line: parts[1],
+        end_line: parts[1],
+        annotation_level: "failure",
+        message: ""
+      }
+      annotations << current_annotation
     end
-    results[current_file] << line
-  end
-
-  annotations = results.map do |file, result|
-    path, lineno = file.split(":", 2)
-
-    {
-      path: path,
-      start_line: lineno,
-      end_line: lineno,
-      annotation_level: "failure",
-      message: result.join("\n")
-    }
+    current_annotation[:message] << line
   end
 
   check_result = {
