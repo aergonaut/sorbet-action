@@ -61,7 +61,7 @@ end
 def run_sorbet
   _stdout, stderr, _status = Open3.capture3("bundle exec srb tc")
 
-  output = stderr
+  output = stderr.split("\n")
 
   results = Hash.new { |hash, key| hash[key] = [] }
 
@@ -80,6 +80,7 @@ def run_sorbet
 
   current_file = nil
   output.each do |line|
+    next if line == ""
     # an unindented line signals output for a new error has started
     if line !~ /^\s/
       current_file = line.split(":")[0..1].join
