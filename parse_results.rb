@@ -5,7 +5,7 @@ require "time"
 @headers = {
   "Content-Type": "application/json",
   "Accept": "application/vnd.github.antiope-preview+json",
-  "Authorization": "Bearer #{ENV["GITHUB_TOKEN"]}",
+  "Authorization": "Bearer #{ENV.fetch("GITHUB_TOKEN")}",
   "User-Agent": "sorbet-action"
 }
 
